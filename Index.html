@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Framework 3D · Líder Desarrollador · Belcorp</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pu50:#EEEDFE;--pu100:#CECBF6;--pu200:#AFA9EC;--pu400:#7F77DD;--pu600:#534AB7;--pu800:#3C3489;--pu900:#26215C;
+  --te50:#E1F5EE;--te100:#9FE1CB;--te400:#1D9E75;--te600:#0F6E56;--te800:#085041;
+  --co50:#FAECE7;--co100:#F5C4B3;--co400:#D85A30;--co600:#993C1D;--co800:#712B13;
+  --am50:#FAEEDA;--am100:#FAC775;--am400:#BA7517;--am800:#633806;
+  --gr50:#F1EFE8;--gr100:#D3D1C7;--gr400:#888780;--gr800:#444441;
+  --bg:#FAFAF8;--card:#FFFFFF;--text:#1A1A18;--muted:#6B6B66;--border:#E8E6DF;
+  --r:12px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+/* NAV */
+nav{background:var(--pu900);padding:0 2rem;display:flex;align-items:center;gap:1.5rem;height:56px;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:17px;color:#fff;white-space:nowrap}
+.nav-logo span{color:var(--pu200);font-style:italic}
+.nav-links{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.nl{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;border:none;background:none;transition:all .15s;white-space:nowrap}
+.nl:hover,.nl.on{background:rgba(255,255,255,.12);color:#fff}
+
+/* PAGES */
+.pg{display:none}
+.pg.on{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:var(--pu900);padding:2.5rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden}
+.hero-tag{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:500;color:var(--pu100);margin-bottom:.75rem;letter-spacing:.06em;text-transform:uppercase}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,42px);color:#fff;line-height:1.15;margin-bottom:.6rem}
+.hero h1 em{color:var(--pu200);font-style:italic}
+.hero p{font-size:14px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto 1.5rem;line-height:1.7}
+.hero-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pill{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid;cursor:pointer;transition:all .15s;background:transparent}
+.p-te{color:var(--te800);border-color:var(--te100);background:var(--te50)}
+.p-te:hover{background:var(--te400);color:#fff;border-color:var(--te400)}
+.p-pu{color:var(--pu800);border-color:var(--pu100);background:var(--pu50)}
+.p-pu:hover{background:var(--pu400);color:#fff;border-color:var(--pu400)}
+.p-co{color:var(--co800);border-color:var(--co100);background:var(--co50)}
+.p-co:hover{background:var(--co400);color:#fff;border-color:var(--co400)}
+
+/* LAYOUT */
+.wrap{max-width:920px;margin:0 auto;padding:2rem 1.5rem}
+.sec-cap{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:1.25rem 0 .75rem}
+
+/* PHASE BANNERS */
+.pb{padding:11px 15px;border-radius:var(--rs);margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:10px}
+.pb.pre{background:var(--te50);border:0.5px solid var(--te100)}
+.pb.dur{background:var(--pu50);border:0.5px solid var(--pu100)}
+.pb-tag{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:20px;flex-shrink:0;margin-top:1px}
+.pb-tag.pre{background:var(--te800);color:var(--te50)}
+.pb-tag.dur{background:var(--pu800);color:var(--pu50)}
+.pb-txt{font-size:13px;line-height:1.55}
+.pb-txt.pre{color:var(--te800)}
+.pb-txt.dur{color:var(--pu800)}
+
+/* TOP TABS */
+.ttabs{display:flex;gap:6px;padding:1.25rem 0 .5rem;flex-wrap:wrap}
+.tt{padding:7px 18px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);background:var(--card);color:var(--muted);transition:all .15s}
+.tt.on{background:var(--text);color:#fff;border-color:var(--text)}
+
+/* STEP CARDS */
+.step{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.sh{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer;transition:background .15s;user-select:none}
+.sh:hover{background:var(--bg)}
+.snum{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.sn-te{background:var(--te50);color:var(--te800)}
+.sn-pu{background:var(--pu50);color:var(--pu800)}
+.stitle{flex:1}
+.stitle h3{font-size:14px;font-weight:500;margin-bottom:1px}
+.stitle p{font-size:12px;color:var(--muted)}
+.schev{color:var(--muted);font-size:16px;transition:transform .2s;flex-shrink:0}
+.sb{display:none;border-top:1px solid var(--border);padding:15px}
+.sb.open{display:block}
+.sh.open .schev{transform:rotate(90deg)}
+
+/* CHECKLIST */
+.cli{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);cursor:pointer}
+.cli:last-child{border-bottom:none;padding-bottom:0}
+.cli:first-child{padding-top:0}
+.clb{width:20px;height:20px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:var(--card);color:transparent;font-size:12px}
+.clb.ck{background:var(--te400);border-color:var(--te400);color:#fff}
+.clt{font-size:13px;line-height:1.5;flex:1}
+.clt.ck{color:var(--muted);text-decoration:line-through}
+.cln{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+
+/* QUESTIONS */
+.qm{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:.75rem 0 5px}
+.qi{padding:10px 12px;border-radius:var(--rs);background:var(--bg);border:0.5px solid var(--border);font-size:13px;line-height:1.55;margin-bottom:6px;color:var(--text)}
+.qi.te{border-left:3px solid var(--te400);border-radius:0 var(--rs) var(--rs) 0}
+.qi.pu{border-left:3px solid var(--pu400);border-radius:0 var(--rs) var(--rs) 0}
+.qi.co{border-left:3px solid var(--co400);border-radius:0 var(--rs) var(--rs) 0}
+
+/* TIPS */
+.tip{padding:10px 14px;border-radius:var(--rs);font-size:12px;line-height:1.6;margin-top:10px}
+.tip.am{background:var(--am50);color:var(--am800);border:0.5px solid var(--am100)}
+.tip.co{background:var(--co50);color:var(--co800);border:0.5px solid var(--co100)}
+.tip strong{font-weight:500}
+
+/* SBI BLOCKS */
+.sbi-row{display:grid;grid-template-columns:90px 1fr;gap:0;margin-bottom:6px;border-radius:var(--rs);overflow:hidden;border:0.5px solid var(--border)}
+.sbi-label{padding:10px 12px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--pu50);color:var(--pu800);display:flex;align-items:center}
+.sbi-text{padding:10px 12px;font-size:13px;color:var(--text);line-height:1.5;background:var(--card)}
+
+/* PROFILE SELECTOR */
+.ptabs{display:flex;gap:6px;margin-bottom:1rem}
+.pt{flex:1;padding:8px;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);background:var(--card);color:var(--muted);text-align:center;transition:all .15s}
+.pt.te.on{background:var(--te50);color:var(--te800);border:2px solid var(--te400)}
+.pt.pu.on{background:var(--pu50);color:var(--pu800);border:2px solid var(--pu400)}
+.pt.co.on{background:var(--co50);color:var(--co800);border:2px solid var(--co400)}
+.pp{display:none}
+.pp.on{display:block}
+
+/* COMPARE GRID */
+.cg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.cc{border-radius:var(--rs);border:0.5px solid var(--border);overflow:hidden}
+.ch{padding:9px 12px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px}
+.ch.mt{background:var(--te50);color:var(--te800)}
+.ch.top{background:var(--pu50);color:var(--pu800)}
+.cr{padding:9px 12px;border-bottom:0.5px solid var(--border)}
+.cr:last-child{border-bottom:none}
+.cl{font-size:10px;font-weight:600;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.cv{font-size:12px;line-height:1.5;color:var(--text)}
+
+.cs{margin-bottom:16px}
+.ct{font-size:13px;font-weight:500;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);color:var(--text)}
+
+/* PROGRESS BAR */
+.prb{display:flex;align-items:center;gap:8px;margin-top:6px}
+.prl{font-size:11px;color:var(--muted);width:40px;text-align:right;flex-shrink:0}
+.prt{flex:1;height:5px;border-radius:3px;background:var(--border);overflow:hidden}
+.prf{height:100%;border-radius:3px}
+.prf.mt{background:var(--te400);width:55%}
+.prf.tp{background:var(--pu400);width:92%}
+.prv{font-size:11px;font-weight:500;width:28px;flex-shrink:0}
+.prv.mt{color:var(--te800)}
+.prv.tp{color:var(--pu800)}
+
+/* EX BOX */
+.ex{background:var(--bg);border-radius:var(--rs);padding:10px 12px;margin-top:6px;font-size:12px;font-style:italic;color:var(--muted);line-height:1.5;border:0.5px solid var(--border)}
+
+/* COMPETENCIAS PAGE */
+.cf{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
+.cfb{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);background:var(--bg);color:var(--muted);transition:all .15s}
+.cfb.on{background:var(--text);color:#fff;border-color:var(--text)}
+.comp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.comp-hdr{padding:13px 15px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .15s}
+.comp-hdr:hover{background:var(--bg)}
+.comp-icon{width:30px;height:30px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.comp-name{font-size:14px;font-weight:500;flex:1}
+.comp-cat{font-size:11px;padding:2px 10px;border-radius:20px;background:var(--gr50);color:var(--muted);border:0.5px solid var(--border)}
+.comp-body{display:none;border-top:1px solid var(--border)}
+.comp-body.open{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.comp-col{padding:14px}
+.comp-col:first-child{border-right:0.5px solid var(--border)}
+.col-lbl{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.comp-sig{font-size:13px;font-weight:500;margin-bottom:7px;line-height:1.5}
+.comp-ex{font-size:12px;color:var(--muted);line-height:1.55;padding:9px 11px;border-radius:var(--rs);font-style:italic}
+.comp-ex.mt{background:var(--te50)}
+.comp-ex.tp{background:var(--pu50)}
+
+/* PILLAR GRID */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.pillar{padding:13px;border-radius:var(--rs);border:1px solid var(--border)}
+.pillar h4{font-size:12px;font-weight:500;margin-bottom:4px}
+.pillar p{font-size:12px;color:var(--muted);line-height:1.5}
+.pi-te{background:var(--te50);border-color:var(--te100)}
+.pi-te h4{color:var(--te800)}
+.pi-pu{background:var(--pu50);border-color:var(--pu100)}
+.pi-pu h4{color:var(--pu800)}
+.pi-co{background:var(--co50);border-color:var(--co100)}
+.pi-co h4{color:var(--co800)}
+
+/* SUB TABS */
+.stabs{display:flex;gap:6px;margin:.75rem 0}
+.stab{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);background:var(--bg);color:var(--muted);transition:all .15s}
+.stab.on{background:var(--text);color:#fff;border-color:var(--text)}
+.spanel{display:none}
+.spanel.on{display:block}
+
+/* ASK BTN */
+.askb{display:inline-flex;align-items:center;gap:5px;margin-top:12px;padding:7px 14px;border-radius:var(--rs);border:0.5px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;color:var(--muted);transition:background .15s;text-decoration:none}
+.askb:hover{background:var(--bg)}
+
+footer{text-align:center;padding:2rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">3D <span>Líder Desarrollador</span></span>
+  <div class="nav-links">
+    <button class="nl on" onclick="nav('general')">Vista general</button>
+    <button class="nl" onclick="nav('antes')">Antes de la conversación</button>
+    <button class="nl" onclick="nav('durante')">Durante la conversación</button>
+    <button class="nl" onclick="nav('seguimiento')">D3 · Dar seguimiento</button>
+    <button class="nl" onclick="nav('perfiles')">Cumple vs. Destaca</button>
+    <button class="nl" onclick="nav('comp')">Competencias</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════
+     PAGE: VISTA GENERAL
+════════════════════════════ -->
+<div class="pg on" id="pg-general">
+  <div class="hero">
+    <div class="hero-tag">Belcorp · Comité de Talento 2026-1</div>
+    <h1>Framework <em>3D</em> · Vista general</h1>
+    <p>El mapa completo del proceso. Haz clic en cualquier dimensión para ir al detalle.</p>
+    <div class="hero-pills">
+      <button class="pill p-te" onclick="nav2('antes')">D1 · Definir</button>
+      <button class="pill p-pu" onclick="nav2('durante')">D2 · Dialogar</button>
+      <button class="pill p-co" onclick="nav2('seguimiento')">D3 · Dar seguimiento</button>
+    </div>
+  </div>
+
+  <div class="wrap" style="max-width:860px">
+
+    <!-- ── FLOW DIAGRAM ── -->
+    <div class="sec-cap">El flujo completo del líder desarrollador</div>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem;overflow-x:auto">
+      <svg viewBox="0 0 780 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;display:block">
+
+        <!-- ── ANTES label ── -->
+        <rect x="10" y="8" width="120" height="22" rx="11" fill="#085041"/>
+        <text x="70" y="23" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#E1F5EE" letter-spacing="0.06em">ANTES · D1 DEFINIR</text>
+
+        <!-- D1 main box -->
+        <rect x="10" y="38" width="370" height="52" rx="10" fill="#E1F5EE" stroke="#9FE1CB" stroke-width="1"/>
+        <text x="26" y="60" font-family="DM Serif Display,serif" font-size="15" fill="#085041">D1 · Definir</text>
+        <text x="26" y="78" font-family="DM Sans,sans-serif" font-size="11" fill="#0F6E56">Claridad antes de sentarte con tu colaborador</text>
+
+        <!-- D1 three pillars -->
+        <rect x="10" y="100" width="112" height="64" rx="8" fill="#E1F5EE" stroke="#9FE1CB" stroke-width="0.5"/>
+        <text x="66" y="120" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#085041">Expectativas</text>
+        <text x="66" y="135" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">¿Qué resultados</text>
+        <text x="66" y="148" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">concretos espero?</text>
+
+        <rect x="134" y="100" width="112" height="64" rx="8" fill="#E1F5EE" stroke="#9FE1CB" stroke-width="0.5"/>
+        <text x="190" y="120" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#085041">Estándar</text>
+        <text x="190" y="135" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Cumple vs. Destaca</text>
+        <text x="190" y="148" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">en este rol</text>
+
+        <rect x="258" y="100" width="122" height="64" rx="8" fill="#E1F5EE" stroke="#9FE1CB" stroke-width="0.5"/>
+        <text x="319" y="120" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#085041">Desafío</text>
+        <text x="319" y="135" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">El reto que la hará</text>
+        <text x="319" y="148" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">crecer este período</text>
+
+        <!-- Arrow D1 → D2 -->
+        <line x1="195" y1="174" x2="195" y2="198" stroke="#888780" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <polygon points="190,196 195,206 200,196" fill="#888780"/>
+
+        <!-- ── DURANTE label ── -->
+        <rect x="10" y="210" width="138" height="22" rx="11" fill="#3C3489"/>
+        <text x="79" y="225" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#EEEDFE" letter-spacing="0.06em">DURANTE · D2 DIALOGAR</text>
+
+        <!-- D2 main box -->
+        <rect x="10" y="240" width="370" height="52" rx="10" fill="#EEEDFE" stroke="#CECBF6" stroke-width="1"/>
+        <text x="26" y="262" font-family="DM Serif Display,serif" font-size="15" fill="#3C3489">D2 · Dialogar</text>
+        <text x="26" y="280" font-family="DM Sans,sans-serif" font-size="11" fill="#534AB7">La conversación que transforma al colaborador</text>
+
+        <!-- D2 four steps flow -->
+        <rect x="10" y="302" width="78" height="56" rx="8" fill="#EEEDFE" stroke="#CECBF6" stroke-width="0.5"/>
+        <text x="49" y="322" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#3C3489">1 · Apertura</text>
+        <text x="49" y="337" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">Seguridad</text>
+        <text x="49" y="349" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">psicológica</text>
+
+        <polygon points="92,328 100,323 100,333" fill="#AFA9EC"/>
+        <line x1="88" y1="328" x2="100" y2="328" stroke="#AFA9EC" stroke-width="1.5"/>
+
+        <rect x="103" y="302" width="78" height="56" rx="8" fill="#EEEDFE" stroke="#CECBF6" stroke-width="0.5"/>
+        <text x="142" y="322" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#3C3489">2 · Feedback</text>
+        <text x="142" y="337" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">Modelo SBI</text>
+        <text x="142" y="349" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">situacional</text>
+
+        <polygon points="185,328 193,323 193,333" fill="#AFA9EC"/>
+        <line x1="181" y1="328" x2="193" y2="328" stroke="#AFA9EC" stroke-width="1.5"/>
+
+        <rect x="196" y="302" width="78" height="56" rx="8" fill="#EEEDFE" stroke="#CECBF6" stroke-width="0.5"/>
+        <text x="235" y="316" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#3C3489">3 · Grupo</text>
+        <text x="235" y="328" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#3C3489">de talento</text>
+        <text x="235" y="343" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">Con contexto,</text>
+        <text x="235" y="355" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">no como veredicto</text>
+
+        <polygon points="278,328 286,323 286,333" fill="#AFA9EC"/>
+        <line x1="274" y1="328" x2="286" y2="328" stroke="#AFA9EC" stroke-width="1.5"/>
+
+        <rect x="289" y="302" width="91" height="56" rx="8" fill="#EEEDFE" stroke="#CECBF6" stroke-width="0.5"/>
+        <text x="334" y="322" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#3C3489">4 · Plan</text>
+        <text x="334" y="337" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">Máx. 3 compromisos</text>
+        <text x="334" y="349" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#534AB7">con fecha y recurso</text>
+
+        <!-- Arrow D2 → D3 -->
+        <line x1="195" y1="368" x2="195" y2="390" stroke="#888780" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <polygon points="190,388 195,398 200,388" fill="#888780"/>
+
+        <!-- ── SEGUIMIENTO label ── -->
+        <rect x="10" y="400" width="168" height="22" rx="11" fill="#712B13"/>
+        <text x="94" y="415" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#FAECE7" letter-spacing="0.06em">DESPUÉS · D3 SEGUIMIENTO</text>
+
+        <!-- D3 main box -->
+        <rect x="10" y="430" width="370" height="52" rx="10" fill="#FAECE7" stroke="#F5C4B3" stroke-width="1"/>
+        <text x="26" y="452" font-family="DM Serif Display,serif" font-size="15" fill="#712B13">D3 · Dar seguimiento</text>
+        <text x="26" y="470" font-family="DM Sans,sans-serif" font-size="11" fill="#993C1D">El desarrollo ocurre entre conversaciones</text>
+
+        <!-- D3 three pillars -->
+        <rect x="10" y="492" width="112" height="22" rx="6" fill="#FAECE7" stroke="#F5C4B3" stroke-width="0.5"/>
+        <text x="66" y="507" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#712B13">Plan de acción</text>
+
+        <rect x="134" y="492" width="112" height="22" rx="6" fill="#FAECE7" stroke="#F5C4B3" stroke-width="0.5"/>
+        <text x="190" y="507" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#712B13">Checkpoints 30-60-90</text>
+
+        <rect x="258" y="492" width="122" height="22" rx="6" fill="#FAECE7" stroke="#F5C4B3" stroke-width="0.5"/>
+        <text x="319" y="507" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#712B13">Autogestión</text>
+
+        <!-- ══ RIGHT SIDE: CUMPLE vs DESTACA ══ -->
+        <rect x="420" y="8" width="350" height="22" rx="11" fill="#444441"/>
+        <text x="595" y="23" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#F1EFE8" letter-spacing="0.06em">ESTÁNDAR · CUMPLE VS. DESTACA</text>
+
+        <!-- Table header -->
+        <rect x="420" y="38" width="160" height="30" rx="6" fill="#085041"/>
+        <text x="500" y="58" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#E1F5EE">Cumple (Meet)</text>
+        <rect x="590" y="38" width="180" height="30" rx="6" fill="#3C3489"/>
+        <text x="680" y="58" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#EEEDFE">Destaca (Top Talent)</text>
+
+        <!-- Row 1 -->
+        <rect x="420" y="76" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="88" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Resultados</text>
+        <rect x="420" y="92" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="106" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Alcanza objetivos</text>
+        <text x="426" y="120" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">dentro del plazo</text>
+        <rect x="590" y="92" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="106" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">Supera metas y anticipa</text>
+        <text x="596" y="120" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">riesgos sin que le pidan</text>
+
+        <!-- Row 2 -->
+        <rect x="420" y="128" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="140" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Iniciativa</text>
+        <rect x="420" y="144" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="158" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Responde a lo</text>
+        <text x="426" y="172" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">que se le pide</text>
+        <rect x="590" y="144" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="158" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">Anticipa, propone</text>
+        <text x="596" y="172" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">y actúa sin que le pidan</text>
+
+        <!-- Row 3 -->
+        <rect x="420" y="180" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="192" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Aprendizaje</text>
+        <rect x="420" y="196" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="210" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Aprende cuando</text>
+        <text x="426" y="224" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">se le guía</text>
+        <rect x="590" y="196" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="210" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">Busca aprendizaje y</text>
+        <text x="596" y="224" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">lo transfiere al equipo</text>
+
+        <!-- Row 4 -->
+        <rect x="420" y="232" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="244" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Organización</text>
+        <rect x="420" y="248" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="262" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Cumple cuando el</text>
+        <text x="426" y="276" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">líder da seguimiento</text>
+        <rect x="590" y="248" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="262" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">El líder no necesita</text>
+        <text x="596" y="276" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">preguntar — siempre sabe</text>
+
+        <!-- Row 5 -->
+        <rect x="420" y="284" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="296" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Análisis</text>
+        <rect x="420" y="300" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="314" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Explica qué pasó</text>
+        <text x="426" y="328" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">con los datos</text>
+        <rect x="590" y="300" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="314" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">Dice qué hacer con</text>
+        <text x="596" y="328" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">lo que encontró</text>
+
+        <!-- Row 6 -->
+        <rect x="420" y="336" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="348" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Liderazgo</text>
+        <rect x="420" y="352" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="366" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Gestiona y cumple</text>
+        <text x="426" y="380" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">objetivos del equipo</text>
+        <rect x="590" y="352" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="366" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">Desarrolla personas y</text>
+        <text x="596" y="380" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">deja capacidad instalada</text>
+
+        <!-- Row 7 -->
+        <rect x="420" y="388" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="400" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Estrategia</text>
+        <rect x="420" y="404" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="418" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Ejecuta la estrategia</text>
+        <text x="426" y="432" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">bien en su área</text>
+        <rect x="590" y="404" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="418" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">Conecta día a día con</text>
+        <text x="596" y="432" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">largo plazo y ayuda a definirla</text>
+
+        <!-- Row 8 -->
+        <rect x="420" y="440" width="350" height="16" rx="0" fill="#F1EFE8"/>
+        <text x="426" y="452" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#444441">Comunicación</text>
+        <rect x="420" y="456" width="160" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="426" y="470" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">Clara cuando tiene</text>
+        <text x="426" y="484" font-family="DM Sans,sans-serif" font-size="10" fill="#0F6E56">tiempo de prepararse</text>
+        <rect x="590" y="456" width="180" height="36" rx="0" fill="#FFFFFF" stroke="#E8E6DF" stroke-width="0.5"/>
+        <text x="596" y="470" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">Adapta el mensaje y</text>
+        <text x="596" y="484" font-family="DM Sans,sans-serif" font-size="10" fill="#534AB7">genera conexión emocional</text>
+
+        <!-- ── ROL DEL LIDER ── -->
+        <rect x="420" y="500" width="350" height="18" rx="6" fill="#26215C"/>
+        <text x="595" y="513" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#CECBF6">El líder es el andamiaje, no el motor del desarrollo</text>
+
+      </svg>
+    </div>
+
+    <!-- ── QUICK REFERENCE CARDS ── -->
+    <div class="sec-cap">Referencia rápida — las 3 preguntas que el líder debe poder responder</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem">
+      <div style="padding:16px;border-radius:var(--r);background:var(--te50);border:1px solid var(--te100)">
+        <div style="font-size:11px;font-weight:600;color:var(--te800);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px">D1 · Antes</div>
+        <div style="font-size:13px;color:var(--te800);line-height:1.6;font-style:italic">"¿Qué espero de esta persona y tengo claro qué diferencia a alguien que cumple de alguien que destaca en su rol?"</div>
+      </div>
+      <div style="padding:16px;border-radius:var(--r);background:var(--pu50);border:1px solid var(--pu100)">
+        <div style="font-size:11px;font-weight:600;color:var(--pu800);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px">D2 · Durante</div>
+        <div style="font-size:13px;color:var(--pu800);line-height:1.6;font-style:italic">"¿El colaborador sale sabiendo exactamente qué tiene que hacer diferente y con un plan de acción concreto?"</div>
+      </div>
+      <div style="padding:16px;border-radius:var(--r);background:var(--co50);border:1px solid var(--co100)">
+        <div style="font-size:11px;font-weight:600;color:var(--co800);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px">D3 · Después</div>
+        <div style="font-size:13px;color:var(--co800);line-height:1.6;font-style:italic">"¿Tengo agendados los checkpoints de 30-60-90 días y el colaborador lidera su propio proceso de desarrollo?"</div>
+      </div>
+    </div>
+
+    <!-- ── NAVIGATE ── -->
+    <div class="sec-cap">Explorar en detalle</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+      <button onclick="nav2('antes')" style="padding:14px 16px;border-radius:var(--r);border:1px solid var(--te100);background:var(--te50);cursor:pointer;text-align:left;transition:all .15s" onmouseover="this.style.background='#9FE1CB'" onmouseout="this.style.background='#E1F5EE'">
+        <div style="font-size:12px;font-weight:600;color:var(--te800);margin-bottom:4px">Checklist · Antes de la conversación →</div>
+        <div style="font-size:12px;color:var(--te600);line-height:1.4">4 pasos con checklist interactivo para prepararte antes del checkpoint</div>
+      </button>
+      <button onclick="nav2('durante')" style="padding:14px 16px;border-radius:var(--r);border:1px solid var(--pu100);background:var(--pu50);cursor:pointer;text-align:left;transition:all .15s" onmouseover="this.style.background='#CECBF6'" onmouseout="this.style.background='#EEEDFE'">
+        <div style="font-size:12px;font-weight:600;color:var(--pu800);margin-bottom:4px">Guía · Durante la conversación →</div>
+        <div style="font-size:12px;color:var(--pu600);line-height:1.4">Secuencia de 4 momentos con preguntas y guiones concretos</div>
+      </button>
+      <button onclick="nav2('seguimiento')" style="padding:14px 16px;border-radius:var(--r);border:1px solid var(--co100);background:var(--co50);cursor:pointer;text-align:left;transition:all .15s" onmouseover="this.style.background='#F5C4B3'" onmouseout="this.style.background='#FAECE7'">
+        <div style="font-size:12px;font-weight:600;color:var(--co800);margin-bottom:4px">D3 · Dar seguimiento →</div>
+        <div style="font-size:12px;color:var(--co600);line-height:1.4">Plan de acción, checkpoints 30-60-90 y cómo fomentar autogestión</div>
+      </button>
+      <button onclick="nav2('perfiles')" style="padding:14px 16px;border-radius:var(--r);border:1px solid var(--gr100);background:var(--gr50);cursor:pointer;text-align:left;transition:all .15s" onmouseover="this.style.background='#D3D1C7'" onmouseout="this.style.background='#F1EFE8'">
+        <div style="font-size:12px;font-weight:600;color:var(--gr800);margin-bottom:4px">Cumple vs. Destaca por perfil →</div>
+        <div style="font-size:12px;color:var(--gr400);line-height:1.4">Ejemplos concretos para Analista, Gerente y Director</div>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     PAGE: ANTES
+════════════════════════════ -->
+<div class="pg" id="pg-antes">
+  <div class="hero">
+    <div class="hero-tag">Belcorp · Comité de Talento 2026-1</div>
+    <h1>Antes de la <em>conversación</em></h1>
+    <p>Haz esto TÚ solo, antes de sentarte con tu colaborador. Sin esta preparación, la conversación será genérica y no desarrollará a nadie.</p>
+  </div>
+  <div class="wrap">
+    <div class="pb pre">
+      <span class="pb-tag pre">D1 · Definir</span>
+      <span class="pb-txt pre">Completa este checklist antes del checkpoint. Si no puedes responder las preguntas finales de validación, pospón la conversación y termina de prepararte.</span>
+    </div>
+
+    <div class="sec-cap">Paso 1 — Conoce a la persona antes de opinar sobre ella</div>
+    <div class="step">
+      <div class="sh" onclick="tog('a1',this)">
+        <div class="snum sn-te">1</div>
+        <div class="stitle"><h3>Revisa datos objetivos, no solo tu percepción</h3><p>Abre el sistema y mira los números reales de este período</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="a1">
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Revisé los resultados de este colaborador en el período (métricas, objetivos, entregables).<div class="cln">No confíes solo en lo que recuerdas. Los números te pueden sorprender.</div></div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Identifiqué 2-3 situaciones concretas y observables de este período, no generalizaciones.<div class="cln">Ejemplo correcto: "En la presentación del 15 de mayo, cuando..." — no: "siempre llega tarde a las entregas".</div></div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Sé cuál fue su mayor logro y cuál fue su mayor área de oportunidad este período.</div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Revisé el plan de acción del período anterior (si existe) para ver qué cumplió y qué no.</div></div>
+      </div>
+    </div>
+
+    <div class="sec-cap">Paso 2 — Define el estándar de éxito para su rol</div>
+    <div class="step">
+      <div class="sh" onclick="tog('a2',this)">
+        <div class="snum sn-te">2</div>
+        <div class="stitle"><h3>¿Qué significa cumplir vs. destacar en este rol específico?</h3><p>Ve a la pestaña "Cumple vs. Destaca" para tener ejemplos por perfil</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="a2">
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Tengo claro qué significa "cumplir" en el rol de esta persona (resultados mínimos esperados).<div class="cln">La clave: no es hacer más cosas, es hacerlas con más iniciativa, impacto y autonomía.</div></div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Tengo claro qué comportamientos observables diferencian a alguien que destaca en este rol.</div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Puedo describir en qué parte del espectro Cumple–Destaca está esta persona hoy y por qué.<div class="cln">Prepara mínimo 2 ejemplos concretos que sustenten tu evaluación.</div></div></div>
+      </div>
+    </div>
+
+    <div class="sec-cap">Paso 3 — Prepara el grupo de talento y el mensaje</div>
+    <div class="step">
+      <div class="sh" onclick="tog('a3',this)">
+        <div class="snum sn-te">3</div>
+        <div class="stitle"><h3>Cómo lo vas a comunicar, no solo qué vas a decir</h3><p>El grupo de talento es una fotografía del momento, no una etiqueta permanente</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="a3">
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Sé cuál es su grupo de talento y tengo al menos 3 razones observables que lo justifican.</div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Tengo listo cómo comunicar qué significa ese grupo en positivo, no como veredicto sino como punto de partida.</div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Sé qué le falta a esta persona para avanzar al siguiente grupo y puedo decirlo en términos de comportamientos concretos, no adjetivos.</div></div>
+        <div class="tip am"><strong>Si no puedes completar este paso, no hagas la conversación aún.</strong> Una conversación sin claridad del líder confunde al colaborador y destruye confianza.</div>
+      </div>
+    </div>
+
+    <div class="sec-cap">Paso 4 — Define el desafío y el plan de acción tentativo</div>
+    <div class="step">
+      <div class="sh" onclick="tog('a4',this)">
+        <div class="snum sn-te">4</div>
+        <div class="stitle"><h3>Llega con propuestas, no con páginas en blanco</h3><p>Máximo 3 compromisos. Un plan con 10 puntos es una lista de deseos</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="a4">
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Identifiqué 1 desafío concreto para este período que conecte el crecimiento de la persona con una prioridad real del negocio.</div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Tengo 2-3 compromisos de desarrollo tentativo que voy a proponer.<div class="cln">No más de 3. Recuerda: un plan con 10 puntos no se cumple.</div></div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Revisé qué recursos del Learning-Hub son relevantes para las competencias que necesita desarrollar.</div></div>
+        <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div class="clt">Agendé ya los checkpoints de 30, 60 y 90 días en el calendario.<div class="cln">Si no están agendados, no existen. Hazlo ahora, no "después de la conversación".</div></div></div>
+        <div class="tip am"><strong>Regla de los 30-60-90:</strong> agenda los tres checkpoints en el mismo momento en que termines la conversación. Si esperás a "después", no ocurren.</div>
+      </div>
+    </div>
+
+    <div class="sec-cap" style="margin-top:1.75rem">Validación final — pregúntate esto justo antes de entrar</div>
+    <div class="qi te">¿Puedo decirle a esta persona, en 2 frases, qué es lo que más valoro de su trabajo este período?</div>
+    <div class="qi te">¿Puedo decirle, con un ejemplo concreto, qué es lo que necesita cambiar o mejorar?</div>
+    <div class="qi te">¿Sé qué significa para ella escuchar su grupo de talento hoy, y estoy listo para contenerla si reacciona con sorpresa o frustración?</div>
+    <div class="tip co" style="margin-top:10px"><strong>Si respondiste "no" a alguna de estas tres preguntas, regresa al checklist.</strong> La conversación puede esperar. La preparación no.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     PAGE: DURANTE
+════════════════════════════ -->
+<div class="pg" id="pg-durante">
+  <div class="hero">
+    <div class="hero-tag">D2 · Dialogar</div>
+    <h1>Durante la <em>conversación</em></h1>
+    <p>Sigue esta secuencia. No saltes al grupo de talento sin haber hecho los primeros dos pasos. El orden importa.</p>
+  </div>
+  <div class="wrap">
+    <div class="pb dur">
+      <span class="pb-tag dur">En la conversación</span>
+      <span class="pb-txt dur">Cada paso tiene su propósito. La conversación dura ~30 minutos. Si se extiende, está bien — no la cortes por el tiempo.</span>
+    </div>
+
+    <!-- Step D1 -->
+    <div class="step">
+      <div class="sh" onclick="tog('d1',this)">
+        <div class="snum sn-pu">1</div>
+        <div class="stitle"><h3>Abre el espacio — 5 min</h3><p>El colaborador debe sentir que es una conversación, no un juicio</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="d1">
+        <div class="qm">Preguntas de apertura</div>
+        <div class="qi pu">¿Cómo te has sentido en este período? ¿Qué fue lo más desafiante y lo más satisfactorio para ti?</div>
+        <div class="qi pu">Antes de iniciar, quiero escucharte — ¿cómo llegas a este espacio? ¿Cómo te has sentido?</div>
+        <div class="qm">Tu rol en este momento</div>
+        <div class="cli" style="cursor:default"><div class="clb ck">✓</div><div class="clt">Escucha sin interrumpir. No corrijas todavía. Solo escucha y registra.</div></div>
+        <div class="cli" style="cursor:default"><div class="clb ck">✓</div><div class="clt">Si mencionan algo que no sabías, anótalo. Te servirá para ajustar tu feedback.</div></div>
+        <div class="tip am"><strong>Señal de alerta:</strong> si el colaborador dice "bien, todo bien" muy rápido, hay algo que no está diciendo. Haz una pausa y pregunta: "¿Seguro? A veces hay cosas que no decimos en automático."</div>
+      </div>
+    </div>
+
+    <!-- Step D2 -->
+    <div class="step">
+      <div class="sh" onclick="tog('d2',this)">
+        <div class="snum sn-pu">2</div>
+        <div class="stitle"><h3>Da retroalimentación específica — 10 min</h3><p>Situación concreta → comportamiento observado → impacto real (modelo SBI)</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="d2">
+        <div class="qm">Modelo SBI — dos tipos de feedback con ejemplo</div>
+
+        <!-- SBI two-column table -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+
+          <!-- RECONOCIMIENTO -->
+          <div style="border:1px solid var(--te100);border-radius:var(--rs);overflow:hidden">
+            <div style="background:var(--te800);padding:9px 13px;font-size:11px;font-weight:600;color:var(--te50);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:6px">
+              ★ Feedback de reconocimiento
+            </div>
+            <div style="background:#fff">
+              <div style="display:grid;grid-template-columns:90px 1fr;border-bottom:0.5px solid var(--border)">
+                <div style="padding:9px 11px;background:var(--te50);font-size:10px;font-weight:600;color:var(--te800);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center">Situación</div>
+                <div style="padding:9px 11px;font-size:12px;color:var(--text);line-height:1.5">"En la presentación de cierre del ciclo ante el equipo regional..."</div>
+              </div>
+              <div style="display:grid;grid-template-columns:90px 1fr;border-bottom:0.5px solid var(--border)">
+                <div style="padding:9px 11px;background:var(--te50);font-size:10px;font-weight:600;color:var(--te800);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center">Comportamiento</div>
+                <div style="padding:9px 11px;font-size:12px;color:var(--text);line-height:1.5">"...construiste una narrativa con datos y recomendación clara, anticipando las preguntas del directivo."</div>
+              </div>
+              <div style="display:grid;grid-template-columns:90px 1fr">
+                <div style="padding:9px 11px;background:var(--te50);font-size:10px;font-weight:600;color:var(--te800);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center">Impacto</div>
+                <div style="padding:9px 11px;font-size:12px;color:var(--text);line-height:1.5">"...el equipo directivo aprobó el plan en esa misma sesión. Eso fue gracias a cómo lo preparaste."</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MEJORA -->
+          <div style="border:1px solid var(--pu100);border-radius:var(--rs);overflow:hidden">
+            <div style="background:var(--pu800);padding:9px 13px;font-size:11px;font-weight:600;color:var(--pu50);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:6px">
+              ↑ Feedback de mejora
+            </div>
+            <div style="background:#fff">
+              <div style="display:grid;grid-template-columns:90px 1fr;border-bottom:0.5px solid var(--border)">
+                <div style="padding:9px 11px;background:var(--pu50);font-size:10px;font-weight:600;color:var(--pu800);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center">Situación</div>
+                <div style="padding:9px 11px;font-size:12px;color:var(--text);line-height:1.5">"En la reunión del 12 de junio con el equipo regional..."</div>
+              </div>
+              <div style="display:grid;grid-template-columns:90px 1fr;border-bottom:0.5px solid var(--border)">
+                <div style="padding:9px 11px;background:var(--pu50);font-size:10px;font-weight:600;color:var(--pu800);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center">Comportamiento</div>
+                <div style="padding:9px 11px;font-size:12px;color:var(--text);line-height:1.5">"...presentaste los datos sin contexto de tendencia y sin una recomendación concreta."</div>
+              </div>
+              <div style="display:grid;grid-template-columns:90px 1fr">
+                <div style="padding:9px 11px;background:var(--pu50);font-size:10px;font-weight:600;color:var(--pu800);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center">Impacto</div>
+                <div style="padding:9px 11px;font-size:12px;color:var(--text);line-height:1.5">"...el equipo no pudo tomar la decisión ese día y tuvimos que reagendar una nueva reunión."</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- REFLECTION QUESTIONS two-column -->
+        <div class="qm">Preguntas que activan reflexión</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+
+          <div style="border:1px solid var(--te100);border-radius:var(--rs);overflow:hidden">
+            <div style="background:var(--te50);padding:8px 12px;font-size:11px;font-weight:600;color:var(--te800);letter-spacing:.05em;text-transform:uppercase">★ Para el reconocimiento</div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:12px;line-height:1.55;color:var(--text);padding:8px 10px;background:var(--bg);border-radius:var(--rs);border-left:3px solid var(--te400)">Tienes una fortaleza clara en [competencia] — ¿cómo crees que podrías usarla todavía más estratégicamente en tu rol?</div>
+              <div style="font-size:12px;line-height:1.55;color:var(--text);padding:8px 10px;background:var(--bg);border-radius:var(--rs);border-left:3px solid var(--te400)">¿Qué fue lo que te llevó a prepararlo de esa manera? ¿Cómo puedes hacerlo tu forma habitual de trabajar?</div>
+              <div style="font-size:12px;line-height:1.55;color:var(--text);padding:8px 10px;background:var(--bg);border-radius:var(--rs);border-left:3px solid var(--te400)">¿Cómo podrías compartir este aprendizaje con el resto del equipo?</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--pu100);border-radius:var(--rs);overflow:hidden">
+            <div style="background:var(--pu50);padding:8px 12px;font-size:11px;font-weight:600;color:var(--pu800);letter-spacing:.05em;text-transform:uppercase">↑ Para la mejora</div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:12px;line-height:1.55;color:var(--text);padding:8px 10px;background:var(--bg);border-radius:var(--rs);border-left:3px solid var(--pu400)">¿Qué harías diferente si pudieras repetir ese momento?</div>
+              <div style="font-size:12px;line-height:1.55;color:var(--text);padding:8px 10px;background:var(--bg);border-radius:var(--rs);border-left:3px solid var(--pu400)">¿Qué crees que necesitabas para poder hacerlo de otra manera?</div>
+              <div style="font-size:12px;line-height:1.55;color:var(--text);padding:8px 10px;background:var(--bg);border-radius:var(--rs);border-left:3px solid var(--pu400)">¿Qué obstáculos ves para mejorar en esto? ¿Cómo puedo apoyarte yo?</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tip am"><strong>Regla de oro:</strong> siempre inicia por el reconocimiento antes de ir a la mejora. El colaborador que primero se siente visto y valorado está mucho más abierto a recibir el feedback de oportunidad.</div>
+      </div>
+    </div>
+
+    <!-- Step D3 -->
+    <div class="step">
+      <div class="sh" onclick="tog('d3',this)">
+        <div class="snum sn-pu">3</div>
+        <div class="stitle"><h3>Comunica el grupo de talento — 5 min</h3><p>Con contexto, no como veredicto. Es una fotografía, no una sentencia</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="d3">
+        <div class="qm">Guión recomendado</div>
+        <div class="qi pu">"Quiero compartirte cómo te vemos hoy. Estás en [grupo] porque [razón 1 observable] y [razón 2 observable]. Esto es una fotografía del momento — no define quién eres ni dónde puedes llegar."</div>
+        <div class="qi pu">"Para avanzar al siguiente nivel, es necesario evidenciar [comportamiento concreto y observable]. Cuéntame, ¿cómo podemos trabajarlo juntos?"</div>
+        <div class="qm" style="margin-top:10px">Si reacciona con sorpresa o molestia</div>
+        <div class="qi co">Pausa y escucha sin interrumpir. Cuando termine, responde con calma: "Gracias por compartirlo conmigo — es importante que lo digas. Estoy aquí para entenderte, aclarar cualquier duda y ayudarte a encontrar el camino juntos. ¿Qué necesitas de mí en este momento?"</div>
+        <div class="tip am"><strong>Lo más importante:</strong> el colaborador debe salir sabiendo exactamente qué tiene que hacer diferente para avanzar. Si no puede decirte eso al final, la conversación no fue suficientemente clara.</div>
+      </div>
+    </div>
+
+    <!-- Step D4 -->
+    <div class="step">
+      <div class="sh" onclick="tog('d4',this)">
+        <div class="snum sn-pu">4</div>
+        <div class="stitle"><h3>Construye el plan juntos — 10 min</h3><p>Él/ella propone, tú validas y complementas. Máximo 3 compromisos</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="d4">
+        <div class="qm">Preguntas para construir el plan</div>
+        <div class="qi pu">De todo lo que hablamos, ¿cuáles son las 1 o 2 cosas más importantes en las que vas a trabajar?</div>
+        <div class="qi pu">¿Qué necesitas de mi parte? ¿Qué vas a buscar tú por tu propia cuenta?</div>
+        <div class="qi pu">¿Cómo vamos a saber en 30 días que estás avanzando? ¿Qué señal concreta me vas a mostrar?</div>
+        <div class="qm" style="margin-top:10px">Cierre de la conversación</div>
+        <div class="qi pu">¿Con qué te vas de esta conversación? ¿Qué es lo más valioso que te llevas?</div>
+        <div class="qi pu">Repasemos juntos los compromisos: [repite los 3]. ¿Algo que ajustar antes de cerrar?</div>
+        <div class="tip am"><strong>Antes de cerrar:</strong> agenda el próximo checkpoint ahora mismo. No al salir. Ahora. "¿Nos agendamos el 30 de julio para revisar avances?"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     PAGE: DAR SEGUIMIENTO
+════════════════════════════ -->
+<div class="pg" id="pg-seguimiento">
+  <div class="hero">
+    <div class="hero-tag">D3 · Dar seguimiento</div>
+    <h1>El desarrollo ocurre<br><em>entre conversaciones</em></h1>
+    <p>El checkpoint no es el final del proceso — es el inicio. El líder que no da seguimiento convierte una buena conversación en un momento olvidado.</p>
+  </div>
+  <div class="wrap">
+
+    <div class="pb" style="background:var(--co50);border:0.5px solid var(--co100)">
+      <span class="pb-tag" style="background:var(--co800);color:var(--co50)">D3 · Seguimiento</span>
+      <span class="pb-txt" style="color:var(--co800)">El desarrollo real ocurre en el día a día, no en la conversación semestral. Tu rol como líder es sostener el proceso, no solo iniciarlo.</span>
+    </div>
+
+    <div class="sec-cap">Los tres pilares del seguimiento</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem">
+      <div class="pillar pi-co">
+        <h4>Plan de acción</h4>
+        <p>Máximo 3 compromisos concretos, con fecha, recurso y responsable. Sin fecha, no existe.</p>
+      </div>
+      <div class="pillar pi-co">
+        <h4>Checkpoints 30-60-90</h4>
+        <p>Reuniones cortas y consistentes agendadas desde el día del checkpoint inicial.</p>
+      </div>
+      <div class="pillar pi-co">
+        <h4>Autogestión</h4>
+        <p>El colaborador lidera su propio proceso y llega con avances. El líder es el andamiaje, no el motor.</p>
+      </div>
+    </div>
+
+    <div class="sec-cap">Cómo es un buen plan de acción</div>
+
+    <div class="step">
+      <div class="sh" onclick="tog('s31',this)">
+        <div class="snum" style="background:var(--co50);color:var(--co800)">1</div>
+        <div class="stitle"><h3>Las 3 características de un compromiso que se cumple</h3><p>No todo lo que suena a plan es un plan real</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="s31">
+        <div class="cg">
+          <div class="cc">
+            <div class="ch" style="background:var(--co50);color:var(--co800)">Plan que no se cumple</div>
+            <div class="cr"><div class="cl">Qué dice</div><div class="cv">"Mejorar tu liderazgo y tu comunicación este semestre."</div></div>
+            <div class="cr"><div class="cl">Por qué falla</div><div class="cv">Sin acción concreta, sin fecha, sin recurso. Al mes, nadie recuerda qué se acordó.</div></div>
+            <div class="cr"><div class="cl">Resultado</div><div class="cv">El colaborador no sabe por dónde empezar. El líder no sabe qué medir.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">Plan que sí funciona</div>
+            <div class="cr"><div class="cl">Qué dice</div><div class="cv">"Facilitar la reunión mensual de equipo de forma autónoma — primer hito el 30 de julio."</div></div>
+            <div class="cr"><div class="cl">Por qué funciona</div><div class="cv">Acción específica, fecha concreta, señal de avance medible.</div></div>
+            <div class="cr"><div class="cl">Resultado</div><div class="cv">El colaborador sabe exactamente qué hacer. El líder sabe exactamente qué observar.</div></div>
+          </div>
+        </div>
+        <div class="ex">"Un buen compromiso tiene tres elementos: qué voy a hacer (acción), cuándo lo voy a mostrar (fecha) y cómo vamos a saber que lo logré (señal de éxito)."</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="sh" onclick="tog('s32',this)">
+        <div class="snum" style="background:var(--co50);color:var(--co800)">2</div>
+        <div class="stitle"><h3>La regla de los 30-60-90</h3><p>Tres checkpoints cortos que sostienen el desarrollo entre conversaciones formales</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="s32">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+          <div style="padding:12px;border-radius:var(--rs);background:var(--te50);border:0.5px solid var(--te100)">
+            <div style="font-size:11px;font-weight:600;color:var(--te800);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">30 días</div>
+            <div style="font-size:12px;color:var(--te800);line-height:1.55">¿Empezaste? ¿Qué obstáculos aparecieron? ¿Necesitas ajustar algo del plan?</div>
+          </div>
+          <div style="padding:12px;border-radius:var(--rs);background:var(--pu50);border:0.5px solid var(--pu100)">
+            <div style="font-size:11px;font-weight:600;color:var(--pu800);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">60 días</div>
+            <div style="font-size:12px;color:var(--pu800);line-height:1.55">¿Qué evidencia concreta tienes de avance? ¿Qué aprendiste del proceso?</div>
+          </div>
+          <div style="padding:12px;border-radius:var(--rs);background:var(--co50);border:0.5px solid var(--co100)">
+            <div style="font-size:11px;font-weight:600;color:var(--co800);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">90 días</div>
+            <div style="font-size:12px;color:var(--co800);line-height:1.55">¿Qué lograste? ¿Qué sigue? ¿Qué ajustamos para el próximo período?</div>
+          </div>
+        </div>
+        <div class="cli" style="cursor:default"><div class="clb ck">✓</div><div class="clt">Agenda los 3 checkpoints en el mismo momento en que termines el checkpoint inicial.<div class="cln">Si esperás a "después de la conversación", no existen. El calendario es el compromiso.</div></div></div>
+        <div class="cli" style="cursor:default"><div class="clb ck">✓</div><div class="clt">Cada checkpoint dura máximo 30 minutos. No es una reunión de resultados — es una revisión de avance del plan de desarrollo.</div></div>
+        <div class="cli" style="cursor:default"><div class="clb ck">✓</div><div class="clt">El colaborador llega con sus avances preparados, no el líder preguntando desde cero.</div></div>
+        <div class="tip am"><strong>Señal de que el seguimiento está funcionando:</strong> el colaborador llega al checkpoint de 30 días con algo concreto que mostrar, sin que tú hayas tenido que recordárselo.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="sh" onclick="tog('s33',this)">
+        <div class="snum" style="background:var(--co50);color:var(--co800)">3</div>
+        <div class="stitle"><h3>Cómo fomentar que el colaborador se autogestione</h3><p>Tu objetivo es que el desarrollo no dependa de ti para ocurrir</p></div>
+        <span class="schev">›</span>
+      </div>
+      <div class="sb" id="s33">
+        <div class="qm">Preguntas que transfieren responsabilidad al colaborador</div>
+        <div class="qi co">¿Qué hiciste esta semana que te acercó a tu compromiso de desarrollo? ¿Qué te alejó?</div>
+        <div class="qi co">¿Qué obstáculo encontraste que no anticipabas? ¿Cómo lo resolviste o cómo piensas resolverlo?</div>
+        <div class="qi co">¿Qué recurso o apoyo buscaste por tu cuenta? ¿Qué encontraste?</div>
+        <div class="qi co">Si tuvieras que contarle a alguien qué aprendiste este mes, ¿qué le dirías?</div>
+        <div class="qm" style="margin-top:12px">Señales de que la autogestión está ocurriendo</div>
+        <div class="cg" style="margin-top:6px">
+          <div class="cc">
+            <div class="ch" style="background:var(--co50);color:var(--co800)">Señal de alerta</div>
+            <div class="cr"><div class="cv">El colaborador espera a que tú le preguntes para reportar avance.</div></div>
+            <div class="cr"><div class="cv">No puede identificar qué aprendió — solo qué hizo.</div></div>
+            <div class="cr"><div class="cv">Los obstáculos que menciona son los mismos del checkpoint anterior.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">Señal positiva</div>
+            <div class="cr"><div class="cv">Llega al checkpoint con un resumen de sus avances preparado.</div></div>
+            <div class="cr"><div class="cv">Puede conectar lo que hizo con el impacto que tuvo.</div></div>
+            <div class="cr"><div class="cv">Ya tomó acciones para resolver los obstáculos sin esperar a que le digas cómo.</div></div>
+          </div>
+        </div>
+        <div class="ex">"El líder desarrollador sabe que llegó al siguiente nivel cuando su colaborador gestiona su propio plan de desarrollo como si fuera un proyecto propio — con la misma seriedad con la que gestiona sus objetivos de negocio."</div>
+      </div>
+    </div>
+
+    <div class="sec-cap" style="margin-top:1.5rem">Diferencia entre seguimiento que controla y seguimiento que desarrolla</div>
+    <div class="cg">
+      <div class="cc">
+        <div class="ch" style="background:var(--gr50);color:var(--gr800)">Seguimiento que controla</div>
+        <div class="cr"><div class="cv">El líder pregunta "¿ya lo hiciste?" — como si chequeara una tarea.</div></div>
+        <div class="cr"><div class="cv">El colaborador reporta para no quedar mal, no porque quiera avanzar.</div></div>
+        <div class="cr"><div class="cv">Si el líder no hace seguimiento, el plan desaparece.</div></div>
+      </div>
+      <div class="cc">
+        <div class="ch top">Seguimiento que desarrolla</div>
+        <div class="cr"><div class="cv">El líder pregunta "¿qué aprendiste?" — como si acompañara un proceso.</div></div>
+        <div class="cr"><div class="cv">El colaborador reporta porque entiende que el avance es de él, no del líder.</div></div>
+        <div class="cr"><div class="cv">Si el líder falta un checkpoint, el colaborador sigue igual.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     PAGE: PERFILES
+════════════════════════════ -->
+<div class="pg" id="pg-perfiles">
+  <div class="hero">
+    <div class="hero-tag">Referencia por perfil</div>
+    <h1>Cumple vs. <em>Destaca</em></h1>
+    <p>Usa esta vista para prepararte Y para mostrársela a tu colaborador. La claridad compartida es la base del desarrollo.</p>
+  </div>
+  <div class="wrap">
+    <div class="pb pre">
+      <span class="pb-tag pre">Guía</span>
+      <span class="pb-txt pre">Selecciona el perfil de tu colaborador. Puedes compartir esta vista con él/ella durante la conversación para que ambos tengan el mismo referente.</span>
+    </div>
+
+    <div class="ptabs">
+      <button class="pt te on" onclick="prof('analista',this)">Analista</button>
+      <button class="pt pu" onclick="prof('gerente',this)">Gerente</button>
+      <button class="pt co" onclick="prof('director',this)">Director</button>
+    </div>
+
+    <!-- ANALISTA -->
+    <div class="pp on" id="pp-analista">
+      <div class="cs">
+        <div class="ct">Entrega de resultados</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple (Meet)</div>
+            <div class="cr"><div class="cl">Qué hace</div><div class="cv">Entrega lo que se le pide dentro del plazo acordado.</div></div>
+            <div class="cr"><div class="cl">Cómo lo hace</div><div class="cv">Espera instrucciones claras antes de empezar.</div></div>
+            <div class="cr"><div class="cl">Señal visible</div><div class="cv">El entregable llega correcto y a tiempo cuando hay seguimiento del líder.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca (Top Talent)</div>
+            <div class="cr"><div class="cl">Qué hace</div><div class="cv">Entrega lo pedido y además identifica lo que nadie preguntó pero era necesario.</div></div>
+            <div class="cr"><div class="cl">Cómo lo hace</div><div class="cv">Anticipa qué va a necesitar el líder o el equipo y lo incluye sin que se lo pidan.</div></div>
+            <div class="cr"><div class="cl">Señal visible</div><div class="cv">El líder recibe entregables que ya tienen la pregunta respondida antes de hacerla.</div></div>
+          </div>
+        </div>
+        <div class="ex">"La diferencia no es cuánto trabaja — es si piensa más allá de la tarea. El analista que cumple entrega el análisis. El que destaca entrega el análisis Y la recomendación."</div>
+      </div>
+
+      <div class="cs">
+        <div class="ct">Análisis y pensamiento</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cv">Usa los datos que tiene y explica qué pasó.</div></div>
+            <div class="cr"><div class="cv">Presenta información organizada y correcta.</div></div>
+            <div class="cr"><div class="cv">Responde la pregunta que se le hizo.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cv">Cruza fuentes, identifica patrones y dice qué hacer con lo que encontró.</div></div>
+            <div class="cr"><div class="cv">Cuestiona si los datos que le dieron son los correctos para responder la pregunta.</div></div>
+            <div class="cr"><div class="cv">Responde la pregunta Y plantea la siguiente que el equipo debería hacerse.</div></div>
+          </div>
+        </div>
+        <div class="prb"><span class="prl">Cumple</span><div class="prt"><div class="prf mt"></div></div><span class="prv mt">55%</span></div>
+        <div class="prb"><span class="prl">Destaca</span><div class="prt"><div class="prf tp"></div></div><span class="prv tp">92%</span></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Escala de profundidad analítica y autonomía de pensamiento</div>
+      </div>
+
+      <div class="cs">
+        <div class="ct">Autonomía y organización</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cv">Cumple fechas cuando el líder hace seguimiento.</div></div>
+            <div class="cr"><div class="cv">Avisa cuando ya tiene un problema encima.</div></div>
+            <div class="cr"><div class="cv">Se organiza bien para sus propias tareas.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cv">El líder no necesita preguntarle — la información siempre está disponible.</div></div>
+            <div class="cr"><div class="cv">Alerta riesgos antes de que se conviertan en problemas.</div></div>
+            <div class="cr"><div class="cv">Organiza el trabajo de forma que reduce la carga del equipo, no solo la propia.</div></div>
+          </div>
+        </div>
+        <div class="ex">"Un analista que cumple: el líder sabe que si pregunta, obtendrá respuesta. Un analista Top Talent: el líder no necesita preguntar."</div>
+      </div>
+
+      <div class="cs">
+        <div class="ct">Iniciativa y aprendizaje</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cv">Incorpora feedback cuando se lo dan y lo aplica en la siguiente entrega.</div></div>
+            <div class="cr"><div class="cv">Aprende cuando el líder lo guía o cuando hay un espacio formal de capacitación.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cv">Busca aprendizaje por cuenta propia y ya viene con la mejora implementada antes de que se lo pidan.</div></div>
+            <div class="cr"><div class="cv">Transfiere lo que aprende al equipo sin que nadie se lo encargue.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-cap">Preguntas que el líder puede hacer al analista para llevarlo al siguiente nivel</div>
+      <div class="qi te">¿Qué encontraste en los datos que nadie te preguntó, pero que crees que es relevante para el equipo?</div>
+      <div class="qi te">Si tuvieras que presentarle este análisis al director directamente, ¿qué cambiarías?</div>
+      <div class="qi te">¿Cómo podríamos saber en 30 días que tu organización mejoró? ¿Qué señal concreta me darías?</div>
+      <div class="qi te">¿Qué aprendiste este período que no fue parte del plan de trabajo formal?</div>
+    </div>
+
+    <!-- GERENTE -->
+    <div class="pp" id="pp-gerente">
+      <div class="cs">
+        <div class="ct">Gestión del equipo</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cl">Qué hace</div><div class="cv">Asigna tareas, hace seguimiento y el equipo entrega.</div></div>
+            <div class="cr"><div class="cl">Cómo lo hace</div><div class="cv">Resuelve conflictos cuando se le escalan.</div></div>
+            <div class="cr"><div class="cl">Señal visible</div><div class="cv">Su equipo cumple los objetivos del período.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cl">Qué hace</div><div class="cv">Desarrolla capacidades; deja personas más capaces de las que encontró.</div></div>
+            <div class="cr"><div class="cl">Cómo lo hace</div><div class="cv">Anticipa tensiones y las trabaja antes de que exploten.</div></div>
+            <div class="cr"><div class="cl">Señal visible</div><div class="cv">Su equipo cumple Y además propone mejoras sin que él lo pida.</div></div>
+          </div>
+        </div>
+        <div class="ex">"La pregunta que diferencia al gerente que cumple del que destaca: ¿cuando él no está, el equipo funciona igual o mejor — o se paraliza?"</div>
+      </div>
+
+      <div class="cs">
+        <div class="ct">Visión y estrategia</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cv">Entiende la estrategia y la ejecuta bien en su área.</div></div>
+            <div class="cr"><div class="cv">Reporta el avance de los objetivos con claridad.</div></div>
+            <div class="cr"><div class="cv">Toma decisiones operativas de forma autónoma.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cv">Conecta el trabajo del día a día con el largo plazo y lo hace visible para su equipo.</div></div>
+            <div class="cr"><div class="cv">Identifica cuando algo operativo contradice la estrategia y lo plantea antes de ejecutarlo.</div></div>
+            <div class="cr"><div class="cv">Propone ajustes a la estrategia basados en lo que ve en el terreno.</div></div>
+          </div>
+        </div>
+        <div class="prb"><span class="prl">Cumple</span><div class="prt"><div class="prf mt"></div></div><span class="prv mt">55%</span></div>
+        <div class="prb"><span class="prl">Destaca</span><div class="prt"><div class="prf tp"></div></div><span class="prv tp">92%</span></div>
+      </div>
+
+      <div class="cs">
+        <div class="ct">Gestión hacia arriba</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cv">Escala los problemas cuando no puede resolverlos solo.</div></div>
+            <div class="cr"><div class="cv">Reporta resultados con información correcta.</div></div>
+            <div class="cr"><div class="cv">Pide input cuando lo necesita.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cv">Llega con problemas pre-procesados: situación + opciones + recomendación.</div></div>
+            <div class="cr"><div class="cv">Gestiona las expectativas de su director proactivamente, sin esperar a que pregunte.</div></div>
+            <div class="cr"><div class="cv">Filtra lo que sube: no satura al director con detalles que puede resolver él mismo.</div></div>
+          </div>
+        </div>
+        <div class="ex">"Un gerente que cumple escala problemas. Un gerente Top Talent sube decisiones con opciones ya evaluadas. Su director solo necesita elegir, no pensar desde cero."</div>
+      </div>
+
+      <div class="sec-cap">Preguntas para llevar al gerente al siguiente nivel</div>
+      <div class="qi pu">Cuando el equipo tiene un problema que no pueden resolver solos, ¿qué haces antes de venir a mí?</div>
+      <div class="qi pu">¿Cuál es una decisión que tomaste este período que antes me hubieras consultado? ¿Qué te dio la confianza para tomarla?</div>
+      <div class="qi pu">¿Cuál de tus colaboradores está listo para hacer algo que hoy haces tú? ¿Qué te frena para delegárselo?</div>
+      <div class="qi pu">¿Qué debería estar viendo en tu equipo en 6 meses que hoy no está ocurriendo?</div>
+    </div>
+
+    <!-- DIRECTOR -->
+    <div class="pp" id="pp-director">
+      <div class="cs">
+        <div class="ct">Impacto organizacional</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cl">Qué hace</div><div class="cv">Su área logra los resultados del plan.</div></div>
+            <div class="cr"><div class="cl">Cómo lo hace</div><div class="cv">Gestiona bien los recursos y el presupuesto.</div></div>
+            <div class="cr"><div class="cl">Señal visible</div><div class="cv">Su equipo es funcional y estable.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cl">Qué hace</div><div class="cv">Su área genera impacto más allá de sus KPIs — eleva el resultado de otras áreas.</div></div>
+            <div class="cr"><div class="cl">Cómo lo hace</div><div class="cv">Identifica oportunidades de negocio que no estaban en el plan.</div></div>
+            <div class="cr"><div class="cl">Señal visible</div><div class="cv">Su equipo es cantera de talento — produce líderes que el negocio quiere retener.</div></div>
+          </div>
+        </div>
+        <div class="ex">"La distinción clave en un director: ¿su liderazgo se siente solo en su área o se siente en toda la organización?"</div>
+      </div>
+
+      <div class="cs">
+        <div class="ct">Pensamiento estratégico y agenda propia</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cv">Ejecuta la estrategia corporativa con excelencia en su área.</div></div>
+            <div class="cr"><div class="cv">Aporta en los espacios donde se le invita.</div></div>
+            <div class="cr"><div class="cv">Su visión alcanza el horizonte de su propio rol.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cv">Tiene una agenda estratégica propia que complementa y enriquece la estrategia corporativa.</div></div>
+            <div class="cr"><div class="cv">Se sienta en mesas donde no fue invitado porque sabe que tiene algo relevante que aportar.</div></div>
+            <div class="cr"><div class="cv">Su visión alcanza 2-3 años y conecta tendencias externas con decisiones internas hoy.</div></div>
+          </div>
+        </div>
+        <div class="prb"><span class="prl">Cumple</span><div class="prt"><div class="prf mt"></div></div><span class="prv mt">55%</span></div>
+        <div class="prb"><span class="prl">Destaca</span><div class="prt"><div class="prf tp"></div></div><span class="prv tp">92%</span></div>
+      </div>
+
+      <div class="cs">
+        <div class="ct">Cultura y desarrollo del talento</div>
+        <div class="cg">
+          <div class="cc">
+            <div class="ch mt">✓ Cumple</div>
+            <div class="cr"><div class="cv">Hace las conversaciones de talento porque el proceso lo requiere.</div></div>
+            <div class="cr"><div class="cv">Su equipo lo respeta y tiene buen clima.</div></div>
+            <div class="cr"><div class="cv">Retiene a la mayoría de su talento clave.</div></div>
+          </div>
+          <div class="cc">
+            <div class="ch top">★ Destaca</div>
+            <div class="cr"><div class="cv">El desarrollo de su equipo es una convicción personal, no un proceso de RR.HH.</div></div>
+            <div class="cr"><div class="cv">Otros líderes quieren tener personas que pasaron por su equipo — es una escuela.</div></div>
+            <div class="cr"><div class="cv">Atrae talento porque su reputación como líder desarrollador precede al rol.</div></div>
+          </div>
+        </div>
+        <div class="ex">"Un director Top Talent no solo retiene talento — lo produce. En 2 años, debería poder nombrar al menos 3 personas que desarrolló y que hoy tienen más responsabilidad gracias a ese trabajo."</div>
+      </div>
+
+      <div class="sec-cap">Preguntas de autoevaluación para el director</div>
+      <div class="qi co">¿Puedo nombrar 3 personas que desarrollé en los últimos 2 años y que hoy tienen más responsabilidad gracias a ese trabajo?</div>
+      <div class="qi co">¿Hay decisiones estratégicas en las que participé este año que iban más allá de mi área de responsabilidad?</div>
+      <div class="qi co">¿Mi equipo sabe hacia dónde vamos en 2 años y por qué? ¿Me lo podrían explicar sin mí en la sala?</div>
+      <div class="qi co">¿Estoy haciendo cosas que debería estar haciendo uno de mis gerentes? Si sí, ¿qué me frena para delegarlo?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     PAGE: COMPETENCIAS
+════════════════════════════ -->
+<div class="pg" id="pg-comp">
+  <div class="hero">
+    <div class="hero-tag">Modelo de competencias</div>
+    <h1>¿Qué diferencia a quien <em>cumple</em><br>de quien <em>destaca?</em></h1>
+    <p>Cada competencia con señal observable y ejemplo concreto del día a día en Belcorp.</p>
+  </div>
+  <div class="wrap">
+    <div class="cf" id="cf"></div>
+    <div id="comp-list"></div>
+  </div>
+</div>
+
+<footer>Framework 3D · Líder Desarrollador · Belcorp · Comité de Talento 2026-1</footer>
+
+<script>
+const COMPS=[
+  {cat:"Resultados",icon:"📈",name:"Alta agilidad de aprendizaje",meet:{sig:"Incorpora feedback y aprende cuando se le guía.",ex:"Le señalan que sus presentaciones son largas y en la próxima presenta 5 slides en lugar de 20."},top:{sig:"Aprende de forma autónoma y transfiere lo aprendido al equipo.",ex:"Detecta una brecha en el equipo y propone un taller corto que ella misma facilita con lo que aprendió en el Learning-Hub."}},
+  {cat:"Resultados",icon:"🎯",name:"Orientado a resultados y urgencia",meet:{sig:"Alcanza los objetivos dentro de los plazos establecidos.",ex:"El reporte de cierre llega el viernes a las 5pm, completo y sin errores."},top:{sig:"Supera metas, anticipa riesgos y propone acciones correctivas antes de que el líder las pida.",ex:"Nota a mitad del mes que el canal está rezagado un 12% y propone acciones sin que el líder se lo pida."}},
+  {cat:"Mentalidad",icon:"💡",name:"Curiosidad / out of the box",meet:{sig:"Propone ideas cuando el espacio está abierto y se le pregunta.",ex:"En la reunión, cuando el líder pregunta '¿alguna idea?', levanta la mano y comparte una propuesta."},top:{sig:"Cuestiona el statu quo y trae perspectivas nuevas sin que nadie se lo solicite.",ex:"Llega a una reunión de planeación con un benchmark de otro sector y propone adaptarlo. Nadie se lo encargó."}},
+  {cat:"Mentalidad",icon:"🔍",name:"Capacidad analítica",meet:{sig:"Usa datos disponibles para tomar decisiones del día a día.",ex:"Presenta resultados de la campaña con datos de sell-out y explica las causas de la caída."},top:{sig:"Conecta múltiples fuentes y genera insights que mueven decisiones estratégicas.",ex:"Cruza datos de rotación de consejeras con desempeño de zona, descubre un patrón y propone un plan de retención focalizado."}},
+  {cat:"Mentalidad",icon:"🗂️",name:"Ordenado",meet:{sig:"Cumple plazos y entregables con seguimiento del líder.",ex:"Con un recordatorio, entrega los reportes semanales completos y a tiempo."},top:{sig:"Crea sistemas propios que dan visibilidad al equipo sin que nadie se lo pida.",ex:"Sin que nadie lo solicite, arma un tablero compartido. Su líder en otro país siempre sabe en qué punto está el trabajo."}},
+  {cat:"Mentalidad",icon:"🔥",name:"Apasionado",meet:{sig:"Muestra compromiso con su trabajo y buena actitud ante los desafíos.",ex:"Llega preparado a las reuniones, cumple sus compromisos y es positivo."},top:{sig:"Contagia energía y motivación al equipo en los momentos más difíciles.",ex:"En la semana más dura del cierre, propone un ritual de celebración de logros parciales que reactiva la energía del grupo."}},
+  {cat:"Mentalidad",icon:"🧠",name:"Pensamiento crítico",meet:{sig:"Evalúa situaciones con la información disponible.",ex:"Antes de definir el precio de lanzamiento, revisa el histórico de productos similares."},top:{sig:"Cuestiona los supuestos del equipo e identifica lo que nadie está viendo.",ex:"En una reunión donde todos están de acuerdo, pregunta '¿qué pasa si el supuesto del 15% no se cumple?' Su observación cambia la decisión."}},
+  {cat:"Liderazgo",icon:"👥",name:"Liderazgo",meet:{sig:"Gestiona a su equipo, distribuye tareas y logra los objetivos.",ex:"Asigna responsabilidades claras, hace seguimiento y el equipo cumple metas."},top:{sig:"Desarrolla las capacidades de su equipo e impacta más allá de su reporte directo.",ex:"Identifica que un colaborador tiene potencial y le da espacios reales. Ese colaborador es promovido al año siguiente."}},
+  {cat:"Liderazgo",icon:"⚡",name:"Alto rendimiento del equipo",meet:{sig:"Contribuye a un buen clima y no genera conflictos.",ex:"Es colaborativo, apoya a sus compañeros cuando se le pide."},top:{sig:"Crea activamente condiciones para que otros brillen, incluso bajo presión.",ex:"Cuando el equipo está bajo presión de cierre, organiza un espacio para alinear prioridades, reparte carga y reconoce esfuerzos."}},
+  {cat:"Liderazgo",icon:"🗺️",name:"Pensamiento estratégico",meet:{sig:"Entiende la estrategia y la ejecuta bien en su rol.",ex:"Conoce las prioridades del año y alinea sus planes en esa dirección."},top:{sig:"Conecta el día a día con el largo plazo y ayuda a definir el rumbo.",ex:"En una reunión operativa, identifica que una decisión táctica contradice la estrategia de largo plazo. Su observación evita un desvío costoso."}},
+  {cat:"Liderazgo",icon:"🧘",name:"Manejo del estrés",meet:{sig:"Se mantiene funcional bajo presión y cumple sus responsabilidades.",ex:"Aunque la semana de cierre es caótica, mantiene la calma y entrega sin grandes errores."},top:{sig:"Toma buenas decisiones bajo presión y contiene emocionalmente al equipo.",ex:"En medio de una crisis de abastecimiento, toma decisiones rápidas, comunica con claridad y el equipo no siente que perdió el control."}},
+  {cat:"Relacional",icon:"🤝",name:"Cercanía con FFVV",meet:{sig:"Conoce la realidad del canal y la considera en sus decisiones.",ex:"Antes de lanzar una mecánica de incentivo, consulta con el equipo de campo si es viable."},top:{sig:"Es referente para la fuerza de venta, que acude proactivamente a él/ella.",ex:"Las líderes de zona la llaman directamente cuando tienen un problema porque saben que las va a escuchar y a mover fichas."}},
+  {cat:"Relacional",icon:"🎤",name:"Story Telling",meet:{sig:"Comunica con claridad cuando tiene tiempo de prepararse.",ex:"Su presentación de resultados es ordenada y la audiencia entiende el mensaje principal."},top:{sig:"Adapta el mensaje a cualquier audiencia y genera conexión emocional que mueve a la acción.",ex:"En una reunión con el equipo directivo, construye una narrativa que conecta el desempeño con el propósito de la compañía. El CEO pide que se replique en otros mercados."}}
+];
+
+const catColors={Resultados:{bg:"#E1F5EE",fg:"#085041"},Mentalidad:{bg:"#EEEDFE",fg:"#3C3489"},Liderazgo:{bg:"#FAECE7",fg:"#712B13"},Relacional:{bg:"#FAEEDA",fg:"#633806"}};
+let curCat="Todas";
+
+function buildFilters(){
+  const cats=["Todas",...new Set(COMPS.map(c=>c.cat))];
+  document.getElementById("cf").innerHTML=cats.map(c=>`<button class="cfb${c===curCat?" on":""}" onclick="filterComp('${c}',this)">${c}</button>`).join("");
+}
+
+function filterComp(cat,btn){
+  curCat=cat;
+  document.querySelectorAll(".cfb").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");
+  renderComps();
+}
+
+function renderComps(){
+  const filtered=curCat==="Todas"?COMPS:COMPS.filter(c=>c.cat===curCat);
+  let html="",lastCat="";
+  filtered.forEach((c,i)=>{
+    if(c.cat!==lastCat){
+      const cl=catColors[c.cat]||{bg:"#F1EFE8",fg:"#444441"};
+      html+=`<div class="sec-cap">${c.cat}</div>`;
+      lastCat=c.cat;
+    }
+    const id="cc"+i;
+    html+=`<div class="comp-card">
+      <div class="comp-hdr" onclick="toggleComp('${id}')">
+        <div class="comp-icon">${c.icon}</div>
+        <div class="comp-name">${c.name}</div>
+        <div class="comp-cat">${c.cat}</div>
+        <span style="margin-left:8px;color:var(--muted);font-size:16px;transition:transform .2s" id="chev-${id}">›</span>
+      </div>
+      <div class="comp-body" id="${id}">
+        <div class="comp-col">
+          <div class="col-lbl" style="color:#0F6E56">✓ Cumple (Meet)</div>
+          <div class="comp-sig">${c.meet.sig}</div>
+          <div class="comp-ex mt">"${c.meet.ex}"</div>
+        </div>
+        <div class="comp-col">
+          <div class="col-lbl" style="color:#534AB7">★ Destaca (Top Talent)</div>
+          <div class="comp-sig">${c.top.sig}</div>
+          <div class="comp-ex tp">"${c.top.ex}"</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById("comp-list").innerHTML=html;
+}
+
+function toggleComp(id){
+  const b=document.getElementById(id);
+  const ch=document.getElementById("chev-"+id);
+  const open=b.classList.toggle("open");
+  if(ch)ch.style.transform=open?"rotate(90deg)":"";
+}
+
+function nav(id){
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".nl").forEach(b=>b.classList.remove("on"));
+  document.getElementById("pg-"+id).classList.add("on");
+  event.target.classList.add("on");
+  if(id==="comp"){buildFilters();renderComps();}
+  window.scrollTo(0,0);
+}
+function nav2(id){
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".nl").forEach(b=>b.classList.remove("on"));
+  document.getElementById("pg-"+id).classList.add("on");
+  const btns=document.querySelectorAll(".nl");
+  const map={general:0,antes:1,durante:2,seguimiento:3,perfiles:4,comp:5};
+  if(btns[map[id]])btns[map[id]].classList.add("on");
+  if(id==="comp"){buildFilters();renderComps();}
+  window.scrollTo(0,0);
+}
+
+function tog(id,hdr){
+  const b=document.getElementById(id);
+  const open=b.classList.toggle("open");
+  if(hdr)hdr.classList.toggle("open",open);
+}
+
+function chk(el){
+  const box=el.querySelector(".clb");
+  const txt=el.querySelector(".clt");
+  const on=box.classList.toggle("ck");
+  txt.classList.toggle("ck",on);
+}
+
+function prof(id,btn){
+  document.querySelectorAll(".pp").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".pt").forEach(b=>b.classList.remove("on"));
+  document.getElementById("pp-"+id).classList.add("on");
+  btn.classList.add("on");
+}
+</script>
+</body>
+</html>
